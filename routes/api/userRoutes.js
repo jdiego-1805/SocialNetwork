@@ -6,7 +6,7 @@ const {
   deleteUser,
   addReaction,
   removeReaction,
-} = require("../../controllers/UserController");
+} = require("../../controllers/userController");
 
 // /api/Users
 router.route("/").get(getUsers).post(createUser);
