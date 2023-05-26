@@ -1,24 +1,26 @@
 const { Schema, Types } = require("mongoose");
 
-const reactionSchema = new Schema(
+const ReactionSchema = new Schema(
   {
-    reactionId: {
+    ReactionId: {
       type: Schema.Types.ObjectId,
       default: () => new Types.ObjectId(),
     },
-    reactionName: {
+    ReactionName: {
       type: String,
       required: true,
-      maxlength: 280,
+      maxlength: 50,
+      minlength: 4,
+      default: "Unnamed Reaction",
     },
-    username: {
-      type: String,
+    score: {
+      type: Number,
       required: true,
+      default: () => Math.floor(Math.random() * (100 - 70 + 1) + 70),
     },
     createdAt: {
       type: Date,
       default: Date.now,
-      
     },
   },
   {
@@ -29,4 +31,4 @@ const reactionSchema = new Schema(
   }
 );
 
-module.exports = reactionSchema;
+module.exports = ReactionSchema;

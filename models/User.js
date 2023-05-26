@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const reactionSchema = require("./Reaction");
+const ReactionSchema = require("./Reaction");
 
 // Schema to create User model
 const UserSchema = new Schema(
@@ -19,7 +19,7 @@ const UserSchema = new Schema(
       required: true,
       max_length: 50,
     },
-    reactions: [reactionSchema],
+    Reactions: [ReactionSchema],
   },
   {
     toJSON: {
