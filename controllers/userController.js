@@ -17,7 +17,7 @@ const grade = async (UserId) =>
       // Your code here
     },
     {
-      $unwind: "$assignments",
+      $unwind: "$reactions",
     },
     // TODO: Group information for the User with the given ObjectId alongside an overall grade calculated using the $avg operator
     {
@@ -97,14 +97,14 @@ module.exports = {
     }
   },
 
-  // Add an assignment to a User
-  async addAssignment(req, res) {
+  // Add an reaction to a User
+  async addreaction(req, res) {
     try {
-      console.log("You are adding an assignment");
+      console.log("You are adding an reaction");
       console.log(req.body);
       const User = await User.findOneAndUpdate(
         { _id: req.params.UserId },
-        { $addToSet: { assignments: req.body } },
+        { $addToSet: { reactions: req.body } },
         { runValidators: true, new: true }
       );
 
@@ -119,12 +119,12 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Remove assignment from a User
-  async removeAssignment(req, res) {
+  // Remove reaction from a User
+  async removereaction(req, res) {
     try {
       const User = await User.findOneAndUpdate(
         { _id: req.params.UserId },
-        { $pull: { assignment: { assignmentId: req.params.assignmentId } } },
+        { $pull: { reaction: { reactionId: req.params.reactionId } } },
         { runValidators: true, new: true }
       );
 

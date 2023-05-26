@@ -2,21 +2,19 @@ const { Schema, model } = require("mongoose");
 
 const ThoughtSchema = new Schema(
   {
-    ThoughtName: {
+    thoughtText: {
       type: String,
       required: true,
+      maxlength: 280,
+      minlength: 1,
     },
-    inPerson: {
-      type: Boolean,
-      default: true,
-    },
-    startDate: {
-      type: Date,
-      default: Date.now(),
-    },
-    endDate: {
+    createdAt: {
       type: Date,
       default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
+    },
+    username: {
+      type: String,
+      required: true,
     },
     Users: [
       {
