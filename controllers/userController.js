@@ -1,27 +1,5 @@
 const { ObjectId } = require("mongoose").Types;
-const { User, Thought } = require("../models");
-
-// Aggregate function to get the number of Users overall
-const headCount = async () => {
-  const numberOfUsers = await User.aggregate().count("UserCount");
-  return numberOfUsers;
-};
-
-// Aggregate function for getting the overall grade using $avg
-const grade = async (UserId) =>
-  User.aggregate([
-    // only include the given User by using $match
-    { $match: { _id: new ObjectId(UserId) } },
-    {
-      $unwind: "$Reactions",
-    },
-    {
-      $group: {
-        _id: new ObjectId(UserId),
-        overallGrade: { $avg: "$Reactions.score" },
-      },
-    },
-  ]);
+const { User } = require("../models");
 
 module.exports = {
   // Get all Users
@@ -69,7 +47,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Delete a User and remove them from the Thought
+  // Delete a User and remove them from the User
   async deleteUser(req, res) {
     try {
       const User = await User.findOneAndRemove({
@@ -80,13 +58,7 @@ module.exports = {
         return res.status(404).json({ message: "No such User exists" });
       }
 
-      const Thought = await Thought.findOneAndUpdate(
-        { Users: req.params.UserId },
-        { $pull: { Users: req.params.UserId } },
-        { new: true }
-      );
-
-      if (!Thought) {
+      if (!User) {
         return res.status(404).json({
           message: "User deleted, but no Thoughts found",
         });
@@ -98,23 +70,17 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-
-  // Add an Reaction to a User
-  async addReaction(req, res) {
-    console.log("You are adding an Reaction");
-    console.log(req.body);
-
+  // update user
+  async updateUser(req, res) {
     try {
       const User = await User.findOneAndUpdate(
         { _id: req.params.UserId },
-        { $addToSet: { Reactions: req.body } },
+        { $set: req.body },
         { runValidators: true, new: true }
       );
 
       if (!User) {
-        return res
-          .status(404)
-          .json({ message: "No User found with that ID :(" });
+        res.status(404).json({ message: "No User with this id!" });
       }
 
       res.json(User);
@@ -122,22 +88,45 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Remove Reaction from a User
-  async removeReaction(req, res) {
+  // Add an User
+  async addFriend(req, res) {
+    console.log("You are adding a Friend");
+    console.log(req.body);
+
     try {
-      const User = await User.findOneAndUpdate(
-        { _id: req.params.UserId },
-        { $pull: { Reaction: { ReactionId: req.params.ReactionId } } },
+      const Friend = await Friend.findOneAndUpdate(
+        { _id: req.params.friendId },
+        { $addToSet: { Friend: req.body } },
         { runValidators: true, new: true }
       );
 
-      if (!User) {
+      if (!Friend) {
         return res
           .status(404)
-          .json({ message: "No User found with that ID :(" });
+          .json({ message: "No Friend found with that ID :(" });
       }
 
-      res.json(User);
+      res.json(Friend);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  // Remove Friend
+  async removeFriend(req, res) {
+    try {
+      const Friend = await Friend.findOneAndUpdate(
+        { _id: req.params.friendId },
+        { $pull: { Friend: { friendId: req.params.friendId } } },
+        { runValidators: true, new: true }
+      );
+
+      if (!Friend) {
+        return res
+          .status(404)
+          .json({ message: "No Friend found with that ID :(" });
+      }
+
+      res.json(Friend);
     } catch (err) {
       res.status(500).json(err);
     }

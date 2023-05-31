@@ -1,31 +1,26 @@
 const { Schema, model } = require("mongoose");
+const ReactionSchema = require("./Reaction");
 
 // Schema to create a Thought model
-const ThoughtSchema = new Schema(
+const thoughtSchema = new Schema(
   {
-    ThoughtName: {
+    ThoughtText: {
+      type: String,
+      required: true,
+      maxlength: 280,
+      minlength: 1,
+    },
+    createdAt: {
+      type: Date,
+      default: true,
+      default: Date.now(),
+      get: (date) => timeSince(date)
+    },
+    username: {
       type: String,
       required: true,
     },
-    inPerson: {
-      type: Boolean,
-      default: true,
-    },
-    startDate: {
-      type: Date,
-      default: Date.now(),
-    },
-    endDate: {
-      type: Date,
-      // Sets a default value of 12 weeks from now
-      default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
-    },
-    Users: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    reactions: [ReactionSchema],
   },
   {
     toJSON: {
@@ -35,6 +30,10 @@ const ThoughtSchema = new Schema(
   }
 );
 
-const Thought = model("Thought", ThoughtSchema);
+thoughtSchema.virtual('reactionCount').get(function () {
+  return this.reactions.length;
+});
+
+const Thought = model("Thought", thoughtSchema);
 
 module.exports = Thought;

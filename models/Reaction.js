@@ -6,21 +6,19 @@ const ReactionSchema = new Schema(
       type: Schema.Types.ObjectId,
       default: () => new Types.ObjectId(),
     },
-    ReactionName: {
+    ReactionBody: {
       type: String,
       required: true,
-      maxlength: 50,
-      minlength: 4,
-      default: "Unnamed Reaction",
+      maxlength: 280,
     },
-    score: {
-      type: Number,
+    username: {
+      type: String,
       required: true,
-      default: () => Math.floor(Math.random() * (100 - 70 + 1) + 70),
     },
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (date) => timeSince(date)
     },
   },
   {
