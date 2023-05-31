@@ -17,7 +17,7 @@ module.exports = {
   async getSingleUser(req, res) {
     try {
       const user = await User.findOne({
-        _id: req.params.UserId,
+        _id: req.params.userId,
       }).select("-__v");
 
       if (!user) {
@@ -26,7 +26,7 @@ module.exports = {
 
       res.json({
         user,
-        grade: await grade(req.params.UserId),
+        grade: await grade(req.params.userId),
       });
     } catch (err) {
       console.log(err);
@@ -47,7 +47,7 @@ module.exports = {
   async deleteUser(req, res) {
     try {
       const user = await User.findOneAndRemove({
-        _id: req.params.UserId,
+        _id: req.params.userId,
       });
 
       if (!user) {
@@ -70,7 +70,7 @@ module.exports = {
   async updateUser(req, res) {
     try {
       const user = await User.findOneAndUpdate(
-        { _id: req.params.UserId },
+        { _id: req.params.userId },
         { $set: req.body },
         { runValidators: true, new: true }
       );
