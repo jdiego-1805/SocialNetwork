@@ -14,11 +14,6 @@ const userSchema = new Schema(
       required: true,
       unique: true
     },
-    thoughts: {
-      type: String,
-      max_length: 50,
-      unique: true
-    },
     thoughts: [{
         type: Schema.Types.ObjectId,
         ref: "Thought",
@@ -34,6 +29,7 @@ const userSchema = new Schema(
     toJSON: {
       getters: true,
     },
+    id: false
   }
 );
 
