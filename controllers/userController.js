@@ -26,7 +26,6 @@ module.exports = {
 
       res.json({
         user,
-        grade: await grade(req.params.userId),
       });
     } catch (err) {
       console.log(err);
