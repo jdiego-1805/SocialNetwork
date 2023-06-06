@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const ReactionSchema = require("./Reaction");
-
+const moment = require('moment');
 // Schema to create a Thought model
 const thoughtSchema = new Schema(
   {
@@ -14,7 +14,7 @@ const thoughtSchema = new Schema(
       type: Date,
       default: true,
       default: Date.now(),
-      get: (date) => timeSince(date)
+      get: createdAtVal => moment(createdAtVal).format("MMM DD, YYYY [at] hh:mm a")
     },
     username: {
       type: String,
@@ -25,6 +25,7 @@ const thoughtSchema = new Schema(
   {
     toJSON: {
       virtuals: true,
+      getters: true,
     },
     id: false,
   }
